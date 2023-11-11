@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机呈现欺凌对话或视频/音频</title>
+    <style>
+        #content-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #video-container,
+        #audio-container,
+        #lyrics-container {
+            display: none;
+        }
+
+        #video-container video {
+            width: 80%;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content-container">
+        <h2>以下是一段欺凌情境的对话，三名欺凌者和一名受害者。其中一名欺凌者在用手机摄像。</h2>
+        <div id="video-container"></div>
+        <div id="audio-container"></div>
+        <div id="lyrics-container"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var contentContainer = document.getElementById("content-container");
+            var videoContainer = document.getElementById("video-container");
+            var audioContainer = document.getElementById("audio-container");
+            var lyricsContainer = document.getElementById("lyrics-container");
+
+            // 随机选择要显示的内容类型
+            var contentTypes = ["video", "audio", "lyrics"];
+            var randomIndex = Math.floor(Math.random() * contentTypes.length);
+            var selectedContentType = contentTypes[randomIndex];
+
+            // 显示相应的内容
+            if (selectedContentType === "video") {
+                showVideo();
+            } else if (selectedContentType === "audio") {
+                showAudio();
+            } else {
+                showLyrics();
+            }
+
+            // 显示视频
+            function showVideo() {
+                videoContainer.style.display = "block";
+
+                var videoElement = document.createElement("video");
+                videoElement.controls = true;
+                videoElement.preload = "auto"; // 预加载视频
+                videoElement.innerHTML = '<source src="./Materials/Traditional_Bullying_video.mp4" type="video/mp4">Your browser does not support the video tag.';
+                videoContainer.appendChild(videoElement);
+
+                videoElement.addEventListener("ended", function () {
+                    // 视频播放结束后隐藏视频容器
+                    videoContainer.style.display = "none";
+                });
+            }
+
+            // 显示音频
+            function showAudio() {
+                audioContainer.style.display = "block";
+
+                var audioElement = document.createElement("audio");
+                audioElement.controls = true;
+                audioElement.preload = "auto"; // 预加载音频
+                audioElement.innerHTML = '<source src="./Materials/bulllying_only_voice.mp3" type="audio/mpeg">Your browser does not support the audio tag.';
+                audioContainer.appendChild(audioElement);
+
+                audioElement.addEventListener("ended", function () {
+                    // 音频播放结束后隐藏音频容器
+                    audioContainer.style.display = "none";
+                });
+            }
+
+            // 显示欺凌对话
+            function showLyrics() {
+                lyricsContainer.style.display = "block";
+
+                var dialog = [
+                    "欺凌者A:真能耐是不是啊，你是不是能耐。",
+                    "欺凌者B:你再说一遍。",
+                    "受害者:我没有什么。",
+                    "欺凌者A:你以为我不知道那些小报告是你打的啊。你给我当面一套，背后一套。",
+                    "欺凌者A:你给我把头抬起来，给我把头抬起来。",
+                    "欺凌者B:来来看镜头。",
+                    "欺凌者C:看镜头，来来来。",
+                    "欺凌者B:看这儿，来。"
+                ];
+
+                // 计算每行对话的呈现时间
+                var timePerLine = 17000 / dialog.length;
+
+                // 函数显示对话
+                function showNextLine() {
+                    var currentIndex = 0;
+
+                    function showLine() {
+                        if (currentIndex < dialog.length) {
+                            lyricsContainer.innerHTML += "<p>" + dialog[currentIndex] + "</p>";
+                            currentIndex++;
+
+                            // 呈现下一行
+                            setTimeout(showLine, timePerLine);
+                        } else {
+                            // 在17秒后隐藏对话
+                            setTimeout(function () {
+                                lyricsContainer.style.display = "none";
+                            });
+                        }
+                    }
+
+                    // 调用函数开始显示对话
+                    showLine();
+                }
+
+                // 调用函数开始显示对话
+                showNextLine();
+            }
+        });
+    </script>
+</body>
+</html>
